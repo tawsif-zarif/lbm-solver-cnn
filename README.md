@@ -35,7 +35,7 @@ The surrogate model is a custom PyTorch architecture designed for multi-target r
 
 **Prerequisites:** Python 3.8+
 
-```bash
+
 # Clone the repository
 git clone [https://github.com/YourUsername/ai-surrogate-thermal-wind-tunnel.git](https://github.com/YourUsername/ai-surrogate-thermal-wind-tunnel.git)
 cd ai-surrogate-thermal-wind-tunnel
@@ -43,5 +43,9 @@ cd ai-surrogate-thermal-wind-tunnel
 # Install dependencies
 pip install numpy pandas matplotlib torch torchvision
 Usage1. Generate the DatasetRun the LBM simulation to generate the procedural dataset. This will populate the dataset_geometries/ directory with .npy masks and generate dataset_metrics.csv.Bashpython generate_dataset.py
-(Note: Generating a sufficient dataset—e.g., 500 iterations—is computationally intensive and may take several hours on a standard CPU).2. Train the Surrogate ModelOnce the dataset is populated, execute the training script. This script automatically handles the PyTorch Dataset loading, train/test splitting, and backpropagation loop.Bashpython train_cnn.py
-Known Limitations & Future WorkData Normalization: In the current implementation, the target metrics are not normalized before entering the CNN. Because aerodynamic drag variance ($\sim 0.4$) is an order of magnitude larger than the variance of the convective heat transfer coefficient ($\sim 0.03$), the Mean Squared Error loss function disproportionately optimizes for drag. This leads to slight underfitting on the thermal predictions. Future iterations will implement standard score normalization ($z = (x - \mu) / \sigma$) on the training labels to ensure equal gradient weighting across both physical domains.Dataset Size: The current proof-of-concept relies on roughly 460 procedurally generated geometries. Scaling the dataset to 5,000+ examples would likely eliminate remaining generalization errors.
+(Note: Generating a sufficient dataset—e.g., 500 iterations—is computationally intensive and may take several hours on a standard CPU).2. Train the Surrogate ModelOnce the dataset is populated, execute the training script. This script automatically handles the PyTorch Dataset loading, train/test splitting, and backpropagation loop. python train_cnn.py
+
+
+# Known Limitations & Future WorkData Normalization
+In the current implementation, the target metrics are not normalized before entering the CNN. Because aerodynamic drag variance ($\sim 0.4$) is an order of magnitude larger than the variance of the convective heat transfer coefficient ($\sim 0.03$), the Mean Squared Error loss function disproportionately optimizes for drag. This leads to slight underfitting on the thermal predictions. Future iterations will implement standard score normalization ($z = (x - \mu) / \sigma$) on the training labels to ensure equal gradient weighting across both physical domains.
+Dataset Size: The current proof-of-concept relies on roughly 460 procedurally generated geometries. Scaling the dataset to 5,000+ examples would likely eliminate remaining generalization errors.
